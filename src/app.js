@@ -1,8 +1,8 @@
 import express from 'express';
-import ProductManager from './class/productsM.js';
+import ProductManager from '../routes/productsM.js';
 import { __dirname } from './utilidades.js';
 
-import CartManager from './class/cartM.js';
+import CartManager from './routes/cartM.js';
 
 
 
@@ -18,14 +18,14 @@ const cartManager = new CartManager(__dirname + '/public/carts.json');
 
 
 
-/*CARRITO!!*/
-app.post('/api/carts', async (req, res) => {
+
+app.post('/carts', async (req, res) => {
     const newCart = await cartManager.createCart();
     res.status(201).json({ MSJ: 'Nuevo carrito creado', cart: newCart });
 
 });
 
-app.get('/api/carts/:cid', async (req, res) => {
+app.get('/carts/:cid', async (req, res) => {
     const { cid } = req.params;
     const cart = await cartManager.getCartById(cid);
     res.status(200).json(cart);
@@ -42,25 +42,23 @@ app.post('/api/carts/:cid/product/:pid', async (req, res) => {
 
 });
 
-/*PRODUCTO!!!!*/
 
 
-app.post('/api/products', async (req, res) => {
+
+app.post('/products', async (req, res) => {
     const newProduct = req.body; 
     await productManager.addProduct(newProduct);
     res.status(201).json({ mensaje: 'Producto agregado' });
     
 });
 
-app.put('/api/products/:id' , async (req,res) => {
-    // console.log('Entrada Error1')
+app.put('/products/:id' , async (req,res) => {
+   
 
     const {id } = req.params
     const productUpdate = req.body
-//class productM crear metodo que reciba el ID, busque el producto y lo actualice en el archivo 
 
     await productManager.updateProductById(id, productUpdate);
-    // console.log('Entrada Error2')
     res.status(203).json({mensaje: 'Actualizado'})
 })
 
@@ -78,7 +76,7 @@ app.get('/:id' , async (req,res) =>{
     res.status(201).json({resultado: productFind})
 })
 
-app.delete('/api/products/:id', async (req, res) => {
+app.delete('/products/:id', async (req, res) => {
 
     const { id } = req.params;
     await productManager.deleteProductById(id);
